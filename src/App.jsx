@@ -1,7 +1,7 @@
 import React from 'react';
-import ProductList from './components/ProductList';
+import ProductList from './components/ProductList.jsx';
 
-const App: React.FC = () => {
+const App = () => {
     return (
         <div className="App">
             <ProductList />

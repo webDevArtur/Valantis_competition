@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getIds, getItems, filterProducts, getFields } from '../api/api.tsx';
+import { getIds, getItems, filterProducts, getFields } from '../api/api.jsx';
 import {
     Grid,
     Card,
@@ -16,32 +16,15 @@ import {
 } from '@mui/material';
 import Header from './Header';
 import EmptyListMessage from './EmptyListMessage';
-import { SelectChangeEvent } from '@mui/material/Select';
-import { ChangeEvent } from 'react';
 
-
-interface Product {
-    id: string;
-    product: string;
-    price: number;
-    brand: string;
-}
-
-interface Filters {
-    price?: number;
-    product?: string;
-    brand?: string;
-}
-
-
-const ProductsList: React.FC = () => {
-    const [products, setProducts] = useState<Product[]>([]);
-    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+const ProductsList = () => {
+    const [products, setProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [filterType, setFilterType] = useState('');
     const [filterValue, setFilterValue] = useState('');
-    const [brands, setBrands] = useState<string[]>([]);
+    const [brands, setBrands] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -74,7 +57,7 @@ const ProductsList: React.FC = () => {
             try {
                 const brands = await getFields('brand', (page - 1) * 50, 50);
                 if (brands) {
-                    setBrands(brands.filter((brand: string | null) => brand !== null));
+                    setBrands(brands.filter((brand) => brand !== null));
                 }
             } catch (error) {
                 console.error('Error fetching brands:', error);
@@ -87,7 +70,7 @@ const ProductsList: React.FC = () => {
 
     const applyFilters = async () => {
         setLoading(true);
-        const filters: Filters = {};
+        const filters = {};
         if (filterType === 'price') {
             filters.price = parseFloat(filterValue);
         } else if (filterType === 'name') {
@@ -114,15 +97,13 @@ const ProductsList: React.FC = () => {
     };
 
 
-    const handleFilterTypeChange = (e: SelectChangeEvent<string>) => {
+    const handleFilterTypeChange = (e) => {
         setFilterType(e.target.value);
     };
 
-    const handleFilterValueChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setFilterValue(event.target.value);
+    const handleFilterValueChange = (e) => {
+        setFilterValue(e.target.value);
     };
-
-
 
     const handleNextPage = () => {
         setPage(page + 1);
@@ -142,7 +123,8 @@ const ProductsList: React.FC = () => {
         return (
             <Box position="fixed" top="50%" left="50%" >
                 <CircularProgress/>
-            </Box>)
+            </Box>
+        );
     }
 
     const uniqueProducts = Array.from(new Map(products.map(product => [product.id, product])).values());
@@ -151,8 +133,8 @@ const ProductsList: React.FC = () => {
         <Container maxWidth="lg" sx={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)', margin: '0 auto' }}>
             <Header/>
             <Box my={2} display="flex" justifyContent="space-between" alignItems="center">
-                <Box display="flex" alignItems="center" sx={{width: '100%'}}>
-                    <Select value={filterType} onChange={handleFilterTypeChange} placeholder="Filter by" sx={{mr: 1, width: '30%'}}>
+                <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
+                    <Select value={filterType} onChange={handleFilterTypeChange} placeholder="Filter by" sx={{ mr: 1, width: '30%' }}>
                         <MenuItem value="price">Цена</MenuItem>
                         <MenuItem value="name">Название</MenuItem>
                         <MenuItem value="brand">Бренд</MenuItem>
@@ -161,8 +143,8 @@ const ProductsList: React.FC = () => {
                         <Select
                             value={filterValue}
                             onChange={handleFilterValueChange}
-                            placeholder="Выберите бренд"
-                            sx={{mr: 1}}
+                            placeholder="Choose brand"
+                            sx={{ mr: 1, width: '30%' }}
                         >
                             {brands.map((brand, index) => (
                                 <MenuItem key={index} value={brand}>{brand}</MenuItem>
@@ -175,7 +157,7 @@ const ProductsList: React.FC = () => {
                             value={filterValue}
                             onChange={handleFilterValueChange}
                             placeholder={`Фильтровать по ${filterType}`}
-                            sx={{mr: 1, width: '30%'}}
+                            sx={{ mr: 1, width: '30%' }}
                         />
                     )}
                     <Button
@@ -224,10 +206,8 @@ const ProductsList: React.FC = () => {
                 )}
             </Grid>
 
-
-
             <Box mt={3} display="flex" justifyContent="flex-end">
-                <Box sx={{ display: 'flex',alignItems: 'center', width: '100%', justifyContent: 'center', mb: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'center', mb: 2 }}>
                     <Button onClick={handlePrevPage} disabled={page === 1}><b>Предыдущая</b></Button>
                     <Button onClick={handleNextPage}><b>Следующая</b></Button>
                 </Box>

@@ -1,16 +1,17 @@
+import React from 'react';
 import axios from 'axios';
 import md5 from 'md5';
 
 const API_URL = 'http://api.valantis.store:40000/';
 const PASSWORD = 'Valantis';
 
-const getAuthHeader = (): string => {
+const getAuthHeader = () => {
     const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
     const authString = md5(`${PASSWORD}_${timestamp}`);
     return authString;
 };
 
-const retryOnFailure = async (fn: () => Promise<unknown>, retries = 3): Promise<unknown> => {
+const retryOnFailure = async (fn, retries = 3) => {
     for (let i = 0; i < retries; i++) {
         try {
             return await fn();
@@ -27,7 +28,7 @@ const retryOnFailure = async (fn: () => Promise<unknown>, retries = 3): Promise<
     return null;
 };
 
-export const getIds = async (offset: number, limit: number): Promise<string[] | null> => {
+export const getIds = async (offset, limit) => {
     try {
         const fetchData = async () => {
             const response = await axios.post(
@@ -44,7 +45,7 @@ export const getIds = async (offset: number, limit: number): Promise<string[] | 
     }
 };
 
-export const getItems = async (ids: string[]): Promise<any[] | null> => {
+export const getItems = async (ids) => {
     try {
         const fetchData = async () => {
             const response = await axios.post(
@@ -61,7 +62,7 @@ export const getItems = async (ids: string[]): Promise<any[] | null> => {
     }
 };
 
-export const getFields = async (field: string, offset: number, limit: number): Promise<any[] | null> => {
+export const getFields = async (field, offset, limit) => {
     try {
         const fetchData = async () => {
             const response = await axios.post(
@@ -78,7 +79,7 @@ export const getFields = async (field: string, offset: number, limit: number): P
     }
 };
 
-export const filterProducts = async (params: any): Promise<string[] | null> => {
+export const filterProducts = async (params) => {
     try {
         const fetchData = async () => {
             const response = await axios.post(
