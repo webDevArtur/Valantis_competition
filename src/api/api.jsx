@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import md5 from 'md5';
 
-const API_URL = 'https://api.valantis.store:40000/';
+const API_URL = 'http://api.valantis.store:40000/';
 const PASSWORD = 'Valantis';
 
 const getAuthHeader = () => {
